@@ -1,0 +1,50 @@
+.form form div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.form {
+  background-color: white;
+  margin: 10px auto;
+  padding: 40px 50px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.form h1 {
+  color: black;
+  margin: 10px 30px 30px 30px;
+}
+
+.form p {
+  color: black;
+  margin: 10px 30px 30px 30px;
+}
+
+.form form {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: rgb(19, 151, 19);
+  border: none;
+  font-size: 16px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+input {
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  color: black;
+}
