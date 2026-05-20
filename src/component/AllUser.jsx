@@ -10,8 +10,6 @@ const AllUser = () => {
   const fetchAllUser = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user?page=1&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
-
-      console.log(res.data.data.users);
       setAlluser(res.data.data.users);
     } catch (e) {
       console.log(e);

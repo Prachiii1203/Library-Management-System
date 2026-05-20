@@ -1,17 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AllBooks = () => {
   const [allBooks, setAllBooks] = useState([]);
-  //   const [fetchAgain, setFetchAgain] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
+  const nav = useNavigate();
 
   const fetchallBooks = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/book?page=1&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
 
-      //   console.log(res.data.data);
       setAllBooks(res.data.data);
     } catch (e) {
       console.log(e);
@@ -23,7 +23,8 @@ const AllBooks = () => {
   }, []);
 
   const IssueBookBtn = (id) => {
-    console.log(id);
+    localStorage.setItem("issueBookId", id);
+    nav("/issueBook");
   };
 
   return (

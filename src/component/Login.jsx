@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -21,6 +21,7 @@ const Login = () => {
 
   const submitData = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(`${BASE_URL}/auth/sign-in`, loginform);
       const data = response.data.data;
@@ -50,7 +51,6 @@ const Login = () => {
           <input type="password" name="password" onChange={saveData} />
         </div>
         <button onClick={submitData}>Login</button>
-       
       </form>
     </div>
   );

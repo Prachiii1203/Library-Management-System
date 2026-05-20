@@ -49,7 +49,7 @@ const AddBooks = () => {
   };
   return (
     <div className="form">
-      <h1>Add User</h1>
+      <h1>Add Books</h1>
       <form action="" method="post">
         <div>
           <label htmlFor="">Enter Book Name : </label>
