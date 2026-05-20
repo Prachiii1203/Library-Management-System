@@ -1,14 +1,21 @@
 import { Link } from "react-router-dom";
-import AllUser from "./AllUser";
 import Logout from "./Logout";
-import ProtectedRoute from "./ProtectedRoute";
 
 const AdminDashboard = () => {
   return (
-    <div>
-      <Logout />
-      <Link to="/userDetails">Alluser</Link>
-      AdminDashboard
+    <div className="Header">
+      <div className="headerLink">
+      <h1>Admin Panel</h1>
+        <Link to="/allbook"> Library</Link>
+        <Link to="/add-book">Add Books</Link>
+        <Link to="/register">Add User</Link>
+        <Link to="/userDetails">Users</Link>
+        {/* <Link>Issue Book</Link> */}
+        {/* <Link>Return Book</Link> */}
+      </div>
+      <div className="Headerlogout">
+        <Logout />
+      </div>
     </div>
   );
 };

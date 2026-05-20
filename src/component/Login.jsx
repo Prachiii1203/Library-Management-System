@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -50,9 +50,7 @@ const Login = () => {
           <input type="password" name="password" onChange={saveData} />
         </div>
         <button onClick={submitData}>Login</button>
-        <p>
-          {/* Not Registered ? <Link to="/register">Register here...</Link> */}
-        </p>
+       
       </form>
     </div>
   );

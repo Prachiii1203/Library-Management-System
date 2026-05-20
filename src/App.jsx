@@ -5,17 +5,17 @@ import Login from "./component/Login";
 import AdminDashboard from "./component/AdminDashboard";
 import UserDashboard from "./component/UserDashboard";
 import ProtectedRoute from "./component/ProtectedRoute";
-import Error404 from "./component/Error404";
 import Register from "./component/Register";
 import AllUser from "./component/AllUser";
+import AddBooks from "./component/AddBooks";
+import AllBooks from "./component/AllBooks";
 
 function App() {
-  return (
+   return (
     <>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/404" element={<Error404 />} />
         <Route
           path="/admin"
           element={
@@ -33,6 +33,22 @@ function App() {
           }
         />
         <Route
+          path="/add-book"
+          element={
+            <ProtectedRoute role="ADMIN">
+              <AddBooks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/allbook"
+          element={
+            <ProtectedRoute role="ADMIN">
+              <AllBooks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/user"
           element={
             <ProtectedRoute role="USER">
@@ -41,6 +57,7 @@ function App() {
           }
         />
       </Routes>
+      {/* <button onClick={() => nav(-1)}>Back</button> */}
     </>
   );
 }
