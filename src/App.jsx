@@ -14,7 +14,7 @@ import IssueBooks from "./component/IssueBooks";
 function App() {
   return (
     <>
-      <AdminDashboard />
+              <AdminDashboard />
 
       <Routes>
         <Route path="/" element={<Login />} />
@@ -27,7 +27,13 @@ function App() {
             <Route path="allbook" element={<AllBooks />} />
           </Route>
         </Route> */}
-        <Route path="/admin" element={<ProtectedRoute role="ADMIN"></ProtectedRoute>} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="ADMIN">
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/issueBook"
           element={
