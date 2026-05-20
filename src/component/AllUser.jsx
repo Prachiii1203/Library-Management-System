@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 const AllUser = () => {
   const [allUser, setAlluser] = useState([]);
   const [fetchAgain, setFetchAgain] = useState(false);
+  const [page, setPage] = useState(1);
+
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
 
   const fetchAllUser = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user?page=1&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${BASE_URL}/user?page=${page}&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
       setAlluser(res.data.data.users);
     } catch (e) {
       console.log(e);
@@ -32,7 +34,7 @@ const AllUser = () => {
 
   useEffect(() => {
     fetchAllUser();
-  }, [fetchAgain]);
+  }, [fetchAgain, page]);
 
   return (
     <div className="allUser">
@@ -64,6 +66,11 @@ const AllUser = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="navigateBtn">
+
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>Previous</button>
+        <button onClick={() => setPage(page + 1)} >Next</button>
       </div>
     </div>
   );

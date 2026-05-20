@@ -10,9 +10,7 @@ const AllBooks = () => {
 
   const fetchallBooks = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/book?page=1&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
-
-      setAllBooks(res.data.data);
+      const res = await axios.get(`${BASE_URL}/book`, { headers: { Authorization: `Bearer ${token}` } });
     } catch (e) {
       console.log(e);
     }
@@ -20,7 +18,7 @@ const AllBooks = () => {
 
   useEffect(() => {
     fetchallBooks();
-  }, []);
+  }, [page]);
 
   const IssueBookBtn = (id) => {
     localStorage.setItem("issueBookId", id);
@@ -69,6 +67,7 @@ const AllBooks = () => {
           </tbody>
         </table>
       </div>
+      
     </div>
   );
 };
