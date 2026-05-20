@@ -94,29 +94,38 @@ input {
   border-radius: 8px;
 }
 
-.LibraryBook, .allUser {
+.LibraryBook,
+.allUser {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.LibraryBook h1, .allUser h1 {
+.LibraryBook h1,
+.allUser h1 {
   color: #18225f;
 }
 
-.libBooks, .userDetails {
+.libBooks,
+.userDetails {
   background-color: #18225f;
   border: 5px solid palevioletred;
   margin-top: 50px;
 
 }
 
-.libBooks table, .userDetails table {
+.libBooks table,
+.userDetails table {
   border-collapse: collapse;
 }
 
-.libBooks table, .libBooks th, .libBooks td, .userDetails table, .userDetails th, .userDetails td {
+.libBooks table,
+.libBooks th,
+.libBooks td,
+.userDetails table,
+.userDetails th,
+.userDetails td {
   padding: 20px;
   border: 2px solid white;
   color: white;
@@ -124,7 +133,14 @@ input {
   text-transform: capitalize;
 }
 
-.libBooks th, .userDetails th {
+.libBooks th,
+.userDetails th {
   background-color: palevioletred;
   color: black;
+}
+
+.loginHeaderh1 {
+  color: white;
+  text-align: center;
+  padding: 0px ;
 }

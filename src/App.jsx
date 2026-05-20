@@ -1,6 +1,5 @@
 import "./App.css";
-
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./component/Login";
 import AdminDashboard from "./component/AdminDashboard";
 import UserDashboard from "./component/UserDashboard";
@@ -10,12 +9,29 @@ import AllUser from "./component/AllUser";
 import AddBooks from "./component/AddBooks";
 import AllBooks from "./component/AllBooks";
 import IssueBooks from "./component/IssueBooks";
+import { useEffect, useState } from "react";
+import LoginHeader from "./component/LoginHeader";
 
 function App() {
-  return (
-    <>
-              <AdminDashboard />
 
+  const [role, setRole] = useState(localStorage.getItem("role"));
+  const location = useLocation();
+
+  useEffect(() => {
+    setRole(localStorage.getItem("role"));
+  }, []);
+  return (
+    <div>
+
+      {
+        location.pathname === "/" ? (
+          <LoginHeader />
+        ) : role === "ADMIN" ? (
+          <AdminDashboard />
+        ) : (
+          <UserDashboard />
+        )
+      }
       <Routes>
         <Route path="/" element={<Login />} />
         {/* <Route element={<ProtectedRoute role={["ADMIN"]} />}>
@@ -82,17 +98,17 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/user"
           element={
             <ProtectedRoute role="USER">
               <UserDashboard />
             </ProtectedRoute>
           }
-        />
+        /> */}
       </Routes>
       {/* <button onClick={() => nav(-1)}>Back</button> */}
-    </>
+    </div>
   );
 }
 
