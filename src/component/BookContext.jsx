@@ -1,5 +1,6 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "./AuthContext";
 
 const CreateBookContext = createContext();
 
@@ -8,8 +9,7 @@ const BookProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [fetchAgain, setFetchAgain] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
-
+  const { token } = useContext(AuthContext);
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -28,7 +28,7 @@ const BookProvider = ({ children }) => {
 
   useEffect(() => {
     fetchBooks();
-  }, [fetchAgain]);
+  }, [fetchAgain, token]);
 
   return <BookContext.Provider value={{ books, setBooks, fetchBooks, loading, BASE_URL, token, setFetchAgain }}>{children}</BookContext.Provider>;
 };

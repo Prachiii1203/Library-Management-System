@@ -24,13 +24,32 @@
   margin: 10px 30px 30px 30px;
 }
 
+.form form div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.errorMsg {
+  display: block;
+  width: 100%;
+  margin-left: 100px;
+  margin-top: 2px;
+  padding: 2px auto;
+}
+
+.errorMsg p {
+  color: red;
+  padding: 2px auto;
+  }
+  
 .form form {
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
 .form select {
@@ -69,11 +88,11 @@
   display: inline-block;
 }
 
-.css-13cymwt-control{
+.css-13cymwt-control {
   height: 10px;
 }
 
-.css-1wy0on6{
+.css-1wy0on6 {
   display: none;
 }
 

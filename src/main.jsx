@@ -9,12 +9,12 @@ import AuthProvider from "./component/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <UserProvider>
-      <BookProvider>
-        <AuthProvider>
+    <AuthProvider>
+      <UserProvider>
+        <BookProvider>
           <App />
-        </AuthProvider>
-      </BookProvider>
-    </UserProvider>
+        </BookProvider>
+      </UserProvider>
+        </AuthProvider >
   </BrowserRouter>,
 );

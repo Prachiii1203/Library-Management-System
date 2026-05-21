@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./component/Login";
 import AdminHeader from "./component/AdminHeader";
 import UserDashboard from "./component/UserDashboard";
@@ -16,7 +16,7 @@ import AdminDashboard from "./component/AdminDashboard";
 import { AuthContext } from "./component/AuthContext";
 
 function App() {
-  const { role } = useContext(AuthContext );
+  const { role } = useContext(AuthContext);
   const location = useLocation();
 
   return (
@@ -24,90 +24,44 @@ function App() {
       {location.pathname === "/" ? <LoginHeader /> : role === "ADMIN" ? <AdminHeader /> : <UserDashboard />}
       <Routes>
         <Route path="/" element={<Login />} />
-        {/* <Route element={<ProtectedRoute role={["ADMIN"]} />}>
-          <Route path="/admin" element={<AdminHeader />}>
-            <Route path="adduser" element={<Register />} />
-            <Route path="issueBook" element={<IssueBooks />} />
-            <Route path="userDetails" element={<AllUser />} />
-            <Route path="add-book" element={<AddBooks />} />
-            <Route path="allbook" element={<AllBooks />} />
-          </Route>
-        </Route> */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/issueBook"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <IssueBooks />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/userDetails"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AllUser />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/add-book"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AddBooks />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/allbook"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AllBooks showIssueBtn={true} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/adduser"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <Register />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/issueBook"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <IssueBooks />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/issuedbook"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AllIssuedBook />
-            </ProtectedRoute>
-          }
-        />
-        {/* <Route
-          path="/library"
-          element={
-            <ProtectedRoute role="USER">
-              <AllUser showIssueBtn={true} />
-            </ProtectedRoute>
-          }
-        /> */}
+
+        <Route element={<ProtectedRoute role="ADMIN"><Outlet /></ProtectedRoute>}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/issueBook" element={<IssueBooks />} />
+          <Route path="/userDetails" element={<AllUser />} />
+          <Route path="/add-book" element={<AddBooks />} />
+          <Route path="/allbook" element={<AllBooks showIssueBtn={true} />} />
+          <Route path="/adduser" element={<Register />} />
+          <Route path="/issuedbook" element={<AllIssuedBook />} />
+        </Route>
       </Routes>
-      {/* <button onClick={() => nav(-1)}>Back</button> */}
-    </div>
+
+
+      {/* <Route
+            path="/library"
+            element={
+              <ProtectedRoute role="USER">
+                <Library />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/transaction"
+            element={
+              <ProtectedRoute role="USER">
+                <Transaction />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute role="USER">
+                <Profile />
+              </ProtectedRoute>
+            }
+          /> */}
+    </div >
   );
 }
 
