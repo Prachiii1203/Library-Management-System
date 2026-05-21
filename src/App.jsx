@@ -9,18 +9,16 @@ import AllUser from "./component/AllUser";
 import AddBooks from "./component/AddBooks";
 import AllBooks from "./component/AllBooks";
 import IssueBooks from "./component/IssueBooks";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoginHeader from "./component/LoginHeader";
 import AllIssuedBook from "./component/AllIssuedBook";
 import AdminDashboard from "./component/AdminDashboard";
+import { AuthContext } from "./component/AuthContext";
 
 function App() {
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const { role } = useContext(AuthContext );
   const location = useLocation();
 
-  useEffect(() => {
-    setRole(localStorage.getItem("role"));
-  }, []);
   return (
     <div>
       {location.pathname === "/" ? <LoginHeader /> : role === "ADMIN" ? <AdminHeader /> : <UserDashboard />}
@@ -100,10 +98,10 @@ function App() {
           }
         />
         {/* <Route
-          path="/user"
+          path="/library"
           element={
             <ProtectedRoute role="USER">
-              <UserDashboard />
+              <AllUser showIssueBtn={true} />
             </ProtectedRoute>
           }
         /> */}

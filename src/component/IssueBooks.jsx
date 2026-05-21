@@ -1,5 +1,8 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { BookContext } from "./BookContext";
+import { UserContext } from "./UserContext";
+import Select from "react-select";
 
 const IssueBooks = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -8,25 +11,33 @@ const IssueBooks = () => {
     serialNumber: "",
     dueDate: today,
   });
-  const [allBook, setAllBooks] = useState([]);
-  const [user, setUser] = useState([]);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
+
+  //context data
+  const { users } = useContext(UserContext);
+  const [searchedUser, setSearchedUser] = useState();
+
+  const allUser = users.map((u) => ({
+    value: u._id,
+    label: u.userName,
+  }));
+
+  const { books: allBook, BASE_URL, token } = useContext(BookContext);
+  // const [allBook, setAllBooks] = useState([]);
+  // const [user, setUser] = useState([]);
+
   const bookId = localStorage.getItem("issueBookId");
 
-  const fetchData = async () => {
-    try {
-      const bookRes = await axios.get(`${BASE_URL}/book`, { headers: { Authorization: `Bearer ${token}` } });
-      setAllBooks(bookRes.data.data);
-      const UserRes = await axios.get(`${BASE_URL}/user `, { headers: { Authorization: `Bearer ${token}` } });
-      setUser(UserRes.data.data.users);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const UserRes = await axios.get(`${BASE_URL}/user `, { headers: { Authorization: `Bearer ${token}` } });
+  //     setUser(UserRes.data.data.users);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchData();
+    setSearchedUser(users);
   }, []);
 
   const saveData = (e) => {
@@ -34,6 +45,7 @@ const IssueBooks = () => {
     const val = e.target.value;
 
     setIssueBookData((bookData) => ({ ...bookData, [k]: val }));
+    console.log(k, val);
   };
 
   const submitData = async (e) => {
@@ -64,14 +76,28 @@ const IssueBooks = () => {
           <form action="">
             <div>
               <label htmlFor="">User</label>
-              <select name="userId" id="" onChange={saveData}>
+              {/* <select name="userId" id="" onChange={saveData}>
                 <option value="" disabled selected>
                   ---select---
                 </option>
                 {user.map((u) => (
                   <option value={u._id}>{u.userName}</option>
                 ))}
-              </select>
+              </select> */}
+              {/* here in select drop down userName should display */}
+              <Select
+                className="DropDownSelect"
+                options={allUser}
+                isSearchable
+                placeholder="Search User"
+                onClick={saveData}
+                onChange={(selectedOption) => {
+                  setIssueBookData((prev) => ({
+                    ...prev,
+                    userId: selectedOption.value,
+                  }));
+                }}
+              />{" "}
             </div>
             <div>
               <label htmlFor="">Serial Number</label>
@@ -116,3 +142,8 @@ const IssueBooks = () => {
 };
 
 export default IssueBooks;
+
+// users data
+// [0 :  {_id: '6a0df7ef03696ee0b7c7e509', userName: 'emily121', name: 'emily', email: 'emily@123.com', contact: 8878566421}
+// 1 :  {_id: '6a0df7d203696ee0b7c7e503', userName: 'testUser12', name: ' test user', email: 'testUser@123.com', contact: 9878566421}
+// 2 :  {_id: '6a0df79503696ee0b7c7e4fc', userName: 'mike22', name: ' mike', email: 'mike123@gmail.com', contact: 9878566425}]

@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 const Logout = () => {
   const navigate = useNavigate();
   const logout = () => {
-    localStorage.setItem("token", null);
-    localStorage.setItem("role", null);
+    localStorage.clear();
     navigate("/");
   };
   return (
     <div>
-      <button onClick={logout} className="logoutbtn">Logout</button>
+      <button onClick={logout} className="logoutbtn">
+        Logout
+      </button>
     </div>
   );
 };

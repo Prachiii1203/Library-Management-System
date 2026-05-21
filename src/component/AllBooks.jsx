@@ -1,25 +1,12 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { BookContext } from "./BookContext";
 
 const AllBooks = ({ showIssueBtn }) => {
-  const [allBooks, setAllBooks] = useState([]);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
+ 
+
+  const { books } = useContext(BookContext);
   const nav = useNavigate();
-
-  const fetchallBooks = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/book`, { headers: { Authorization: `Bearer ${token}` } });
-      setAllBooks(res.data.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchallBooks();
-  }, []);
 
   const IssueBookBtn = (id) => {
     localStorage.setItem("issueBookId", id);
@@ -54,7 +41,7 @@ const AllBooks = ({ showIssueBtn }) => {
             </tr>
           </thead>
           <tbody>
-            {allBooks.map((book) => (
+            {books.map((book) => (
               <tr key={book._id}>
                 <td>{book.name}</td>
                 <td>{book.author}</td>

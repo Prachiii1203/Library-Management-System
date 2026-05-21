@@ -1,42 +1,29 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 const AllUser = () => {
-  const [allUser, setAlluser] = useState([]);
-  const [fetchAgain, setFetchAgain] = useState(false);
-  const [page, setPage] = useState(1);
+  const { users, page, setPage, totalpage, setFetchAgain } = useContext(UserContext);
+
   const nav = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
 
-  const fetchAllUser = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/user?page=${page}&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
-      setAlluser(res.data.data.users);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const deleteUser = async (id) => {
-    if (window.confirm("Are you sure you want to delete User")) {
+    if (window.confirm("You sure you want to delete User?")) {
       try {
         const res = await axios.delete(`${BASE_URL}/user/${id}`, { headers: { Authorization: `Bearer ${token}` } });
         if (res.data.message === "User deleted successfully") {
           alert(res.data.message);
         }
-        setFetchAgain(!fetchAgain);
+        setFetchAgain((pre) => !pre);
       } catch (e) {
         console.log(e);
       }
     }
   };
-
-  useEffect(() => {
-    fetchAllUser();
-  }, [fetchAgain, page]);
 
   return (
     <div className="allUser">
@@ -44,10 +31,10 @@ const AllUser = () => {
         <h1>Users</h1>
       </div>
       <div className="adduserbtn">
-        <button onClick={()=>nav("/adduser")}>+ Add User</button>
+        <button onClick={() => nav("/adduser")}>+ Add User</button>
       </div>
       <div className="userDetails">
-        <table border={1}>
+        <table>
           <thead>
             <tr>
               <th>Name</th>
@@ -58,7 +45,7 @@ const AllUser = () => {
             </tr>
           </thead>
           <tbody>
-            {allUser.map((user) => (
+            {users.map((user) => (
               <tr key={user._id}>
                 <td>{user.name}</td>
                 <td>{user.userName}</td>
@@ -76,7 +63,9 @@ const AllUser = () => {
         <button onClick={() => setPage(page - 1)} disabled={page === 1}>
           Previous
         </button>
-        <button onClick={() => setPage(page + 1)}>Next</button>
+        <button onClick={() => setPage(page + 1)} disabled={page === totalpage}>
+          Next
+        </button>
       </div>
     </div>
   );

@@ -41,6 +41,42 @@
   padding: 8px 20px 8px 4px;
 }
 
+.form .DropDownSelect {
+  width: 250px;
+  color: black;
+}
+
+.form .DropDownSelect__control {
+  border: 1px solid black;
+  border-radius: 8px;
+  min-height: 40px;
+  box-shadow: none;
+}
+
+.form .DropDownSelect__menu {
+  width: 250px;
+}
+
+.form .DropDownSelect__option {
+  text-transform: capitalize;
+}
+
+.css-1u9des2-indicatorSeparator {
+  display: none;
+}
+
+.css-tj5bde-Svg {
+  display: inline-block;
+}
+
+.css-13cymwt-control{
+  height: 10px;
+}
+
+.css-1wy0on6{
+  display: none;
+}
+
 .form input[type=date] {
   background-color: white;
   color: black;
@@ -170,7 +206,8 @@ input {
   margin: 2px auto;
   width: max-content;
 }
-.adminCard{
+
+.adminCard {
   display: flex;
   justify-content: space-between;
   color: #fff;
@@ -182,9 +219,9 @@ input {
   width: 100%;
   flex-direction: column;
   background-color: #18225f;
-  margin:30px 10px;
+  margin: 30px 10px;
   padding: 20px 40px;
   border-radius: 8px;
   align-items: center;
-  
+
 }

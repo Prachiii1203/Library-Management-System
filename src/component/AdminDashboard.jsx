@@ -1,19 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AllBooks from "./AllBooks";
+import { BookContext } from "./BookContext";
 
 const AdminDashboard = () => {
-  // book/dashboard
-
   const [dashData, setDashData] = useState({});
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
-
+  const { books, BASE_URL, token } = useContext(BookContext);
   const getDashBoardData = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/book/dashboard`, { headers: { Authorization: `Bearer ${token}` } });
       setDashData(res.data.data);
-      console.log(res.data);
     } catch (e) {
       console.log(e);
     }
@@ -23,9 +19,6 @@ const AdminDashboard = () => {
     getDashBoardData();
   }, []);
 
-  //   useEffect(() => {
-  //     console.log(dashData);
-  //   }, []);
   return (
     <div>
       <div className="adminCard">
@@ -47,8 +40,9 @@ const AdminDashboard = () => {
         </div>
         <div>
           <h2>Total Book</h2>
-          <p>56</p>
+          <p>{books.length}</p>
         </div>
+        
       </div>
       <div>
         <AllBooks showIssueBtn={false} />

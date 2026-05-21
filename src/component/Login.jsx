@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { replace, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -8,6 +8,11 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -33,6 +38,7 @@ const Login = () => {
       } else {
         navigate("/user");
       }
+      setRole(data.role);
     } catch (error) {
       console.log(error);
       alert("User Not Exist");
