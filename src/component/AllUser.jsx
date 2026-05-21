@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AllUser = () => {
   const [allUser, setAlluser] = useState([]);
   const [fetchAgain, setFetchAgain] = useState(false);
   const [page, setPage] = useState(1);
+  const nav = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
@@ -41,6 +43,9 @@ const AllUser = () => {
       <div>
         <h1>Users</h1>
       </div>
+      <div className="adduserbtn">
+        <button onClick={()=>nav("/adduser")}>+ Add User</button>
+      </div>
       <div className="userDetails">
         <table border={1}>
           <thead>
@@ -68,9 +73,10 @@ const AllUser = () => {
         </table>
       </div>
       <div className="navigateBtn">
-
-        <button onClick={() => setPage(page - 1)} disabled={page === 1}>Previous</button>
-        <button onClick={() => setPage(page + 1)} >Next</button>
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+          Previous
+        </button>
+        <button onClick={() => setPage(page + 1)}>Next</button>
       </div>
     </div>
   );

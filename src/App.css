@@ -6,6 +6,7 @@
 }
 
 .form {
+  width: fit-content;
   background-color: #18225f;
   margin: 10px auto;
   padding: 40px 50px;
@@ -30,6 +31,23 @@
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
+}
+
+.form select {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 8px 20px 8px 4px;
+}
+
+.form input[type=date] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 8px;
+  font-size: 16px;
+  /* padding: 8px 20px 8px 4px; */
 }
 
 button {
@@ -142,5 +160,31 @@ input {
 .loginHeaderh1 {
   color: white;
   text-align: center;
-  padding: 0px ;
+  padding: 0px;
+}
+
+.adduserbtn {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 2px auto;
+  width: max-content;
+}
+.adminCard{
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+
+}
+
+.adminCard>div {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  background-color: #18225f;
+  margin:30px 10px;
+  padding: 20px 40px;
+  border-radius: 8px;
+  align-items: center;
+  
 }

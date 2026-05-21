@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AllBooks = () => {
+const AllBooks = ({ showIssueBtn }) => {
   const [allBooks, setAllBooks] = useState([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
@@ -11,6 +11,7 @@ const AllBooks = () => {
   const fetchallBooks = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/book`, { headers: { Authorization: `Bearer ${token}` } });
+      setAllBooks(res.data.data);
     } catch (e) {
       console.log(e);
     }
@@ -18,7 +19,7 @@ const AllBooks = () => {
 
   useEffect(() => {
     fetchallBooks();
-  }, [page]);
+  }, []);
 
   const IssueBookBtn = (id) => {
     localStorage.setItem("issueBookId", id);
@@ -30,6 +31,11 @@ const AllBooks = () => {
       <div>
         <h1>Library</h1>
       </div>
+      {showIssueBtn && (
+        <div>
+          <button onClick={() => nav("/add-book")}>+ Add Book</button>
+        </div>
+      )}
       <div className="libBooks">
         <table>
           <thead>
@@ -37,9 +43,14 @@ const AllBooks = () => {
               <th>Book Name</th>
               <th>Author</th>
               <th>Total Books</th>
-              <th>Available Copies</th>
-              <th>Available to issue</th>
-              <th>Issue Book</th>
+              <th>Copies Details</th>
+
+              {showIssueBtn && (
+                <>
+                  <th>Available to issue</th>
+                  <th>Issue Book</th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -48,26 +59,29 @@ const AllBooks = () => {
                 <td>{book.name}</td>
                 <td>{book.author}</td>
                 <td>{book.totalCopies}</td>
-                <td>
-                  {book.copies.map((copy) => (
-                    <p key={copy._id}>
-                      {copy.serialNumber} {copy.isAvailable ? "Available" : "Not Available"}
-                      {/* "✅" : "❌" */}
-                    </p>
-                  ))}
-                </td>
+                {showIssueBtn && (
+                  <td>
+                    {book.copies.map((copy) => (
+                      <p key={copy._id}>
+                        {copy.serialNumber} {copy.isAvailable ? "Available" : "Not Available"}
+                        {/* "✅" : "❌" */}
+                      </p>
+                    ))}
+                  </td>
+                )}
                 <td>{book.currentAvailability ? "Available" : "Not Available"}</td>
-                <td>
-                  <button disabled={!book.currentAvailability} onClick={() => IssueBookBtn(book._id)}>
-                    Issue Book
-                  </button>
-                </td>
+                {showIssueBtn && (
+                  <td>
+                    <button disabled={!book.currentAvailability} onClick={() => IssueBookBtn(book._id)}>
+                      Issue Book
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      
     </div>
   );
 };

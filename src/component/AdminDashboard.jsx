@@ -1,25 +1,59 @@
-import { Link, Outlet } from "react-router-dom";
-import Logout from "./Logout";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import AllBooks from "./AllBooks";
 
 const AdminDashboard = () => {
+  // book/dashboard
+
+  const [dashData, setDashData] = useState({});
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
+
+  const getDashBoardData = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/book/dashboard`, { headers: { Authorization: `Bearer ${token}` } });
+      setDashData(res.data.data);
+      console.log(res.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getDashBoardData();
+  }, []);
+
+  //   useEffect(() => {
+  //     console.log(dashData);
+  //   }, []);
   return (
-    <>
-      <div className="Header">
-        <div className="headerLink">
-            <h1> Admin Panel</h1>
-          <Link to="/allbook"> Library</Link>
-          <Link to="/add-book">Add Books</Link>
-          <Link to="/register">Add User</Link>
-          <Link to="/userDetails">Users</Link>
-          {/* <Link>Issue Book</Link> */}
-          {/* <Link>Return Book</Link> */}
+    <div>
+      <div className="adminCard">
+        <div>
+          <h2>Total Issued</h2>
+          <p>{dashData.totalIssued}</p>
         </div>
-        <div className="Headerlogout">
-          <Logout />
+        <div>
+          <h2>Today Issued</h2>
+          <p>{dashData.todaysIssued}</p>
+        </div>
+        <div>
+          <h2>Due Today</h2>
+          <p>{dashData.todaysDue}</p>
+        </div>
+        <div>
+          <h2>Due Missed</h2>
+          <p>{dashData.dueMissed}</p>
+        </div>
+        <div>
+          <h2>Total Book</h2>
+          <p>56</p>
         </div>
       </div>
-      {/* <Outlet /> */}
-    </>
+      <div>
+        <AllBooks showIssueBtn={false} />
+      </div>
+    </div>
   );
 };
 
