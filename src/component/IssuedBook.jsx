@@ -4,6 +4,7 @@ import { BookContext } from "./BookContext";
 import { UserContext } from "./UserContext";
 import Select from "react-select";
 import { useLocation, useNavigate } from "react-router-dom";
+import { validateBtn } from "./Validation";
 
 const IssueBooks = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -12,6 +13,12 @@ const IssueBooks = () => {
     serialNumber: "",
     dueDate: today,
   });
+  const [errors, setErrors] = useState({
+    userId: "",
+    serialNumber: "",
+    dueDate: today,
+  });
+  const [backend, setBackend] = useState("");
   const location = useLocation();
 
   const { users } = useContext(UserContext);
@@ -31,11 +38,26 @@ const IssueBooks = () => {
     const val = e.target.value;
 
     setIssueBookData((bookData) => ({ ...bookData, [k]: val }));
-    console.log(k, val);
-  };
+   };
 
   const submitData = async (e) => {
     e.preventDefault();
+
+    if (!issueBookData.userId) {
+      setErrors((err) => ({ ...err, userId: "Please select user" }));
+      return;
+    }
+
+    if (!issueBookData.serialNumber) {
+      setErrors((err) => ({ ...err, serialNumber: "Please select serial number" }));
+      return;
+    }
+
+    if (issueBookData.dueDate < today) {
+      setErrors((err) => ({ ...err, dueDate: "Due date cannot be less than today" }));
+      return;
+    }
+
     try {
       const res = await axios.post(`${BASE_URL}/book/issue/${bookId}`, issueBookData, {
         headers: {
@@ -44,14 +66,18 @@ const IssueBooks = () => {
         },
         timeout: 5000,
       });
-      console.log(res.data);
-      if (res.data.message === "book issued succesfully!") {
-        alert(res.data.message);
+       if (res.data.message === "book issued succesfully!") {
+        setIssueBookData({
+          userId: "",
+          serialNumber: "",
+          dueDate: today,
+        });
       }
       setFetchAgain((p) => !p);
-      navigation("/allbook");
+      // navigation("/allbook");
     } catch (e) {
       console.log(e);
+      setBackend(e.response?.data?.message || "Something went-wrong");
     }
   };
 
@@ -60,21 +86,50 @@ const IssueBooks = () => {
       ...base,
       border: "1px solid black",
       borderRadius: "8px",
-      minHeight: "32px", // 👈 overall height fix
-      height: "32px",
+      minHeight: "32px",
+      maxHeight: "32px",
       boxShadow: "none",
-    }),
-
-    menu: (base) => ({
-      ...base,
-      width: "250px",
-      zIndex: 9999,
     }),
 
     valueContainer: (provided) => ({
       ...provided,
       height: "32px",
       padding: "0 8px",
+      display: "flex",
+      alignItems: "center",
+    }),
+
+    input: (provided) => ({
+      ...provided,
+      margin: "0px",
+      padding: "0px",
+      color: "black",
+    }),
+
+    singleValue: (provided) => ({
+      ...provided,
+      color: "black",
+    }),
+
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: "32px",
+    }),
+
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      display: "none",
+    }),
+
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      padding: "4px",
+    }),
+
+    menu: (base) => ({
+      ...base,
+      width: "250px",
+      zIndex: 9999,
     }),
 
     menuList: (base) => ({
@@ -84,23 +139,11 @@ const IssueBooks = () => {
       overflowX: "hidden",
     }),
 
-    input: (provided) => ({
-      ...provided,
-      margin: "0px",
-      padding: "0px",
-    }),
-
     option: (base) => ({
       ...base,
       textTransform: "capitalize",
     }),
-
-    indicatorsContainer: (provided) => ({
-      ...provided,
-      height: "32px",
-    }),
   };
-
   return (
     <div>
       {bookId !== null && (
@@ -115,8 +158,9 @@ const IssueBooks = () => {
                 styles={customStyles}
                 options={allUser}
                 isSearchable
+                isClearable={false}
+                value={allUser.find((u) => u.value === issueBookData.userId)}
                 placeholder="Search User"
-                onClick={saveData}
                 onChange={(selectedOption) => {
                   setIssueBookData((prev) => ({
                     ...prev,
@@ -124,6 +168,9 @@ const IssueBooks = () => {
                   }));
                 }}
               />{" "}
+              <div className="errorMsg">
+                <p>{errors.userId}</p>
+              </div>
             </div>
             <div>
               <label htmlFor="">Serial Number</label>
@@ -158,8 +205,16 @@ const IssueBooks = () => {
             <div>
               <label htmlFor="">Due Date</label>
               <input type="date" name="dueDate" id="" min={today} onChange={saveData} value={issueBookData.dueDate} />
+              <div className="errorMsg">
+                <p>{errors.dueDate}</p>
+              </div>
             </div>
-            <button onClick={submitData}>Book Issued</button>
+            <div className="errorMsg">
+              <p>{backend}</p>
+            </div>
+            <button onClick={submitData} disabled={!validateBtn({}, issueBookData)}>
+              Book Issued
+            </button>
           </form>
         </div>
       )}

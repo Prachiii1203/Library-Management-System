@@ -1,28 +1,10 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { useContext, useState } from "react";
+import { TransactionContext } from "./TransactionContext";
 
 const UserProfile = () => {
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const { token } = useContext(AuthContext);
-  const [userTransaction, setUserTransaction] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const { transaction, page, setPage, totalpage } = useContext(TransactionContext);
 
-  const getAllTransaction = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/transaction?page=1&limit=10`, { headers: { Authorization: `Bearer ${token}` } });
-
-      setUserTransaction(res.data.data.transactions);
-      setTotalPage(res.data.data.pagination.totalPages);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getAllTransaction();
-  }, [page]);
+  const [role, setRole] = useState(localStorage.getItem("role"));
 
   return (
     <div>
@@ -31,11 +13,12 @@ const UserProfile = () => {
           <h1>Transaction</h1>
         </div>
 
-        {userTransaction.length < 0 ? (
+        {transaction.length >= 0 ? (
           <div className="userDetails">
             <table>
               <thead>
                 <tr>
+                  {role === "ADMIN" && <th>UserId</th>}
                   <th>Book</th>
                   <th>Book Status</th>
                   <th>Issue Date</th>
@@ -43,8 +26,9 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody>
-                {userTransaction.map((ut) => (
+                {transaction.map((ut) => (
                   <tr key={ut._id}>
+                    {role === "ADMIN" && <td>{ut.user.userName}</td>}
                     <td>{ut.book.name}</td>
                     <td>{ut.transactionType}</td>
                     <td>{ut.createdAt.split("T")[0]}</td>
@@ -57,16 +41,15 @@ const UserProfile = () => {
         ) : (
           <div>No Transaction Yet</div>
         )}
-        {userTransaction.length > 10 && (
-          <div className="navigateBtn">
-            <button onClick={() => setPage(page - 1)} disabled={page === 1}>
-              Previous
-            </button>
-            <button onClick={() => setPage(page + 1)} disabled={page === totalPage}>
-              Next
-            </button>
-          </div>
-        )}
+        <div className="navigateBtn">
+          <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+            Previous
+          </button>
+          <button onClick={() => setPage(page + 1)} disabled={page === totalpage}>
+            Next
+          </button>
+        </div>
+        <p>Page {page} </p>
       </div>
     </div>
   );

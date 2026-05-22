@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import { validateEmail, validatePassword } from "./Validation";
+import { validateBtn, validateEmail, validatePassword } from "./Validation";
 import { UserContext } from "./UserContext";
 
 const Login = () => {
@@ -16,6 +16,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [backend, setBackend] = useState("");
   useEffect(() => {
     localStorage.clear();
   }, []);
@@ -51,13 +52,12 @@ const Login = () => {
       if (data.role === "ADMIN") {
         navigate("/admin");
       } else {
-        const user = users.find((u) => u.email === loginform?.email);
-        localStorage.setItem("user", user.userName);
+        // const user = users.find((u) => u.email === loginform?.email);
         navigate("/home");
       }
     } catch (error) {
       console.log(error);
-      alert("User Not Exist");
+      setBackend(error.response?.data?.message || "Something went wrong");
     }
   };
   return (
@@ -78,7 +78,12 @@ const Login = () => {
             <p>{errors.password}</p>
           </div>
         </div>
-        <button onClick={submitData}>Login</button>
+        <div className="errorMsg">
+          <p>{backend}</p>
+        </div>
+        <button onClick={submitData} disabled={!validateBtn(errors, loginform)}>
+          Login
+        </button>
       </form>
     </div>
   );

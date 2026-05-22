@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CreateBookContext = createContext();
 
@@ -10,6 +11,7 @@ const BookProvider = ({ children }) => {
   const [fetchAgain, setFetchAgain] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const { token } = useContext(AuthContext);
+  const nav = useNavigate();
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -21,6 +23,10 @@ const BookProvider = ({ children }) => {
       setBooks(res.data.data);
     } catch (e) {
       console.log(e);
+      // if (e.response?.status === 401) {
+      //   localStorage.clear();
+      //   nav("/");
+      // }
     } finally {
       setLoading(false);
     }

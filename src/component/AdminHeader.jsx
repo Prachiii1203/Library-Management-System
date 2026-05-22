@@ -14,7 +14,8 @@ const AdminHeader = () => {
           {/* <Link to="/add-book">Add Books</Link> */}
           {/* <Link to="/adduser">Add User</Link> */}
           <Link to="/userDetails">Users</Link>
-          <Link to="/issuedbook">Issued Book</Link>
+          <Link to="/issuedbook">Return Book</Link>
+          <Link to="/history">Book history</Link>
         </div>
         <div className="Headerlogout">
           <Logout />

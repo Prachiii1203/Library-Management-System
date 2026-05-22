@@ -8,7 +8,7 @@ const UserDashboard = () => {
         <div className="headerLink">
           {" "}
           <Link to="/home">
-            <h2>Welcome {localStorage.getItem("user")} !! </h2>
+            <h2>Welcome {} !! </h2>
           </Link>
           <Link to="/home">Library</Link>
           <Link to="/transaction">My Transaction</Link>

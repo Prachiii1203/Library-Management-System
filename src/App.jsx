@@ -4,11 +4,11 @@ import Login from "./component/Login";
 import AdminHeader from "./component/AdminHeader";
 import UserDashboard from "./component/UserDashboard";
 import ProtectedRoute from "./component/ProtectedRoute";
-import Register from "./component/Register";
+import Register from "./component/RegisterUser";
 import AllUser from "./component/AllUser";
 import AddBooks from "./component/AddBooks";
 import AllBooks from "./component/AllBooks";
-import IssueBooks from "./component/IssueBooks";
+import IssueBooks from "./component/IssuedBook";
 import { useContext } from "react";
 import AllIssuedBook from "./component/AllIssuedBook";
 import AdminDashboard from "./component/AdminDashboard";
@@ -49,6 +49,7 @@ function App() {
           <Route path="/allbook" element={<AllBooks showIssueBtn={true} />} />
           <Route path="/adduser" element={<Register />} />
           <Route path="/issuedbook" element={<AllIssuedBook />} />
+          <Route path="/history" element={<UserProfile />} />
         </Route>
 
         {/* USER ROUTING */}

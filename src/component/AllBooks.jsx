@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BookContext } from "./BookContext";
 
 const AllBooks = ({ showIssueBtn }) => {
-  const { books } = useContext(BookContext);
+  const { books: allbooks } = useContext(BookContext);
   const nav = useNavigate();
+  const [books, setBooks] = useState(allbooks);
 
   const IssueBookBtn = (id, name) => {
     // localStorage.setItem("issueBookId", id);
@@ -12,15 +13,34 @@ const AllBooks = ({ showIssueBtn }) => {
     nav("/issueBook", { state: data });
   };
 
+  const searchData = (e) => {
+    const value = e.target.value.toLowerCase();
+
+    if (value === "") {
+      return setBooks(allbooks);
+    }
+    const filteredBooks = allbooks.filter((book) => book.name.toLowerCase().includes(value));
+
+    setBooks(filteredBooks);
+  };
+
+  useEffect(() => {
+    setBooks(allbooks);
+  }, [allbooks]);
   return (
     <div className="LibraryBook">
       <div>
         <h1>Library</h1>
       </div>
       {showIssueBtn && (
-        <div>
-          <button onClick={() => nav("/add-book")}>+ Add Book</button>
-        </div>
+        <>
+          <div>
+            <button onClick={() => nav("/add-book")}>+ Add Book</button>
+          </div>
+          <div>
+            <input type="text" onChange={searchData} />
+          </div>
+        </>
       )}
       <div className="libBooks">
         <table>

@@ -2,11 +2,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  position: relative;
+  overflow: auto;
 }
 
 .form {
   width: fit-content;
+  max-width: 500px;
   background-color: #18225f;
   margin: 10px auto;
   padding: 40px 50px;
@@ -49,10 +51,15 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
-.form select {
+.navigateBtn{
+  display: flex;
+  gap: 10px;
+}
+
+/* .form select {
   background-color: white;
   color: black;
   border: 1px solid black;
@@ -78,6 +85,81 @@
 
 .form .DropDownSelect__option {
   text-transform: capitalize;
+} */
+
+/* Fix native select height and text visibility */
+.form select {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 4px 20px 4px 4px;
+  height: 32px;
+  max-height: 32px;
+  font-size: 14px;
+  line-height: 1;
+  appearance: auto;
+  -webkit-appearance: auto;
+  cursor: pointer;
+  min-width: 250px;
+}
+
+/* Fix date input height and text visibility */
+.form input[type=date] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 8px;
+  font-size: 14px;
+  height: 32px;
+  max-height: 32px;
+  padding: 0 4px;
+  line-height: 32px;
+  min-width: 242px;
+}
+
+/* Fix React Select height and text visibility */
+.form .DropDownSelect {
+  width: 250px;
+  color: black;
+}
+
+.form .DropDownSelect__control {
+  border: 1px solid black !important;
+  border-radius: 8px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  box-shadow: none !important;
+}
+
+.form .DropDownSelect__value-container {
+  height: 32px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+.form .DropDownSelect__input-container {
+  margin: 0;
+  padding: 0;
+  color: black;
+}
+
+.form .DropDownSelect__single-value {
+  color: black;
+  margin: 0;
+}
+
+.form .DropDownSelect__indicators {
+  height: 32px;
+}
+
+.form .DropDownSelect__indicator {
+  padding: 4px;
+}
+
+.form .DropDownSelect__placeholder {
+  color: #555;
 }
 
 .form input[type=date] {
@@ -117,7 +199,8 @@ input {
 }
 
 .Header .headerLink {
-  flex: 0 0 70%
+  flex: 0 0 70%;
+
 }
 
 .Header .Headerlogout {
@@ -157,6 +240,7 @@ input {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 }
 
 .LibraryBook h1,
@@ -230,12 +314,12 @@ input {
 
 /* CUSTOMER CSS */
 
-.userLibrary{
+.userLibrary {
   color: #18225f;
   margin: 60px auto;
 }
 
-.userLibraryHeader{
+.userLibraryHeader {
   margin: 70px;
 }
 

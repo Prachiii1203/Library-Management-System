@@ -1,8 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
-import { validateCopies, validateName } from "./Validation";
+import { useContext, useState } from "react";
+import { validateBookAuthor, validateBtn, validateCopies, validateNumber } from "./Validation";
+import { BookContext } from "./BookContext";
 
 const AddBooks = () => {
+  const { setFetchAgain } = useContext(BookContext);
   const [newBook, setnewBook] = useState({
     name: "",
     author: "",
@@ -14,8 +16,9 @@ const AddBooks = () => {
     author: "",
     totalCopies: null,
     copies: "",
-    backend: ""
   });
+  const [backend, setBackend] = useState("");
+
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
   const saveData = (e) => {
@@ -24,24 +27,22 @@ const AddBooks = () => {
 
     setnewBook((formData) => ({ ...formData, [k]: val }));
 
-    console.log(newBook);
-
-    setnewBook((prev) => ({ ...prev, [k]: val, }));
+    setnewBook((prev) => ({ ...prev, [k]: val }));
 
     if (k === "name") {
-      setErrors((prev) => ({ ...prev, name: validateName(val), }));
+      setErrors((prev) => ({ ...prev, name: validateBookAuthor(val) }));
     }
 
     if (k === "author") {
-      setErrors((prev) => ({ ...prev, author: validateName(val), }));
+      setErrors((prev) => ({ ...prev, author: validateBookAuthor(val) }));
     }
 
     if (k === "totalCopies") {
-      setErrors((prev) => ({ ...prev, totalCopies: val <= 0 ? "Total copies must be greater than 0" : "", }));
+      setErrors((prev) => ({ ...prev, totalCopies: val <= 0 ? "Total copies must be greater than 0" : "" }));
     }
 
     if (k === "copies") {
-      setErrors((prev) => ({ ...prev, copies: validateCopies(val, newBook.totalCopies), }));
+      setErrors((prev) => ({ ...prev, copies: validateCopies(val, newBook.totalCopies) }));
     }
   };
 
@@ -66,7 +67,6 @@ const AddBooks = () => {
       });
 
       if (res.data.message === "Book created succesfully!") {
-        alert(res.data.message);
         setnewBook({
           name: "",
           author: "",
@@ -74,11 +74,13 @@ const AddBooks = () => {
           copies: "",
         });
       }
+      setFetchAgain((p) => !p);
+      setBackend("");
     } catch (e) {
       console.log(e);
-      setErrors((prev) => ({ ...prev, backend: e.response?.data?.message || "Something went wrong", }));
-    };
-  }
+      setBackend(e.response?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <div className="form">
       <h1>Add Books</h1>
@@ -99,11 +101,7 @@ const AddBooks = () => {
         </div>{" "}
         <div>
           <label htmlFor="">Enter Total Copies : </label>
-          <input type="number" name="totalCopies" onKeyDown={(e) => {
-            if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-" || e.key === "*") {
-              e.preventDefault();
-            }
-          }} value={newBook.totalCopies} onChange={saveData} />
+          <input type="number" name="totalCopies" onKeyDown={validateNumber} value={newBook.totalCopies} onChange={saveData} />
           <div className="errorMsg">
             <p>{errors.totalCopies}</p>
           </div>
@@ -116,15 +114,13 @@ const AddBooks = () => {
           </div>
         </div>
         <small>Add serial number and separte them by comma(,)</small>
-
         <div className="errorMsg">
-          <p>{errors.backend}</p>
+          <p>{backend}</p>
         </div>
-        <button onClick={submitData}>Add Book</button>
+        <button onClick={submitData} disabled={!validateBtn(errors,newBook)}> Add Book</button>
       </form>
     </div>
   );
 };
-
 
 export default AddBooks;

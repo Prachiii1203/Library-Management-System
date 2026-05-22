@@ -1,20 +1,23 @@
 import axios from "axios";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { BookContext } from "./BookContext";
+import { TransactionContext } from "./TransactionContext";
 
 const AllIssuedBook = () => {
-  const nav = useNavigate();
+  // const nav = useNavigate();
 
   const { books: allIssuedBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
+  const { setFetchAgain: setTransactionfetch } = useContext(TransactionContext);
 
   const returnedBook = async (id, serialNumber) => {
-    const res = await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
-    if (res.data.message === "book returned succesfully!") {
-      alert(res.data.message);
+    if (window.confirm("Book Returned Confirm ?")) {
+      await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
+      setFetchAgain((pre) => !pre);
+      setTransactionfetch((pre) => !pre);
     }
-    setFetchAgain((pre) => !pre);
-    nav("/admin");
+    return;
+    // nav("/allbook");
   };
 
   return (
