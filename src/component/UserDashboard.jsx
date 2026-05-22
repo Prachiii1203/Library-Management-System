@@ -7,11 +7,11 @@ const UserDashboard = () => {
       <div className="Header">
         <div className="headerLink">
           {" "}
-          <Link to="/admin">
-            {" "}
-            <h2>Welcome User !! </h2>
+          <Link to="/home">
+            <h2>Welcome {localStorage.getItem("user")} !! </h2>
           </Link>
-          <Link> Profile</Link>
+          <Link to="/home">Library</Link>
+          <Link to="/transaction">My Transaction</Link>
         </div>
         <div className="Headerlogout">
           <Logout />

@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { BookContext } from "./BookContext";
 
 const AllBooks = ({ showIssueBtn }) => {
- 
-
   const { books } = useContext(BookContext);
   const nav = useNavigate();
 
-  const IssueBookBtn = (id) => {
-    localStorage.setItem("issueBookId", id);
-    nav("/issueBook");
+  const IssueBookBtn = (id, name) => {
+    // localStorage.setItem("issueBookId", id);
+    const data = { bookId: id, bookname: name };
+    nav("/issueBook", { state: data });
   };
 
   return (
@@ -59,7 +58,7 @@ const AllBooks = ({ showIssueBtn }) => {
                 <td>{book.currentAvailability ? "Available" : "Not Available"}</td>
                 {showIssueBtn && (
                   <td>
-                    <button disabled={!book.currentAvailability} onClick={() => IssueBookBtn(book._id)}>
+                    <button disabled={!book.currentAvailability} onClick={() => IssueBookBtn(book._id, book.name)}>
                       Issue Book
                     </button>
                   </td>

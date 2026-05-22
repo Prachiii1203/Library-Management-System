@@ -41,15 +41,15 @@
 .errorMsg p {
   color: red;
   padding: 2px auto;
-  }
-  
+}
+
 .form form {
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* gap: 20px; */
+  gap: 20px;
 }
 
 .form select {
@@ -78,22 +78,6 @@
 
 .form .DropDownSelect__option {
   text-transform: capitalize;
-}
-
-.css-1u9des2-indicatorSeparator {
-  display: none;
-}
-
-.css-tj5bde-Svg {
-  display: inline-block;
-}
-
-.css-13cymwt-control {
-  height: 10px;
-}
-
-.css-1wy0on6 {
-  display: none;
 }
 
 .form input[type=date] {
@@ -242,5 +226,29 @@ input {
   padding: 20px 40px;
   border-radius: 8px;
   align-items: center;
+}
 
+/* CUSTOMER CSS */
+
+.userLibrary{
+  color: #18225f;
+  margin: 60px auto;
+}
+
+.userLibraryHeader{
+  margin: 70px;
+}
+
+.libraryCard {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.bookCard {
+  background-color: #18225f;
+  border-radius: 10px;
+  padding: 50px 30px 70px 30px;
+  color: wheat;
+  text-align: left;
 }

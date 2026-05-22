@@ -9,11 +9,12 @@ import AllUser from "./component/AllUser";
 import AddBooks from "./component/AddBooks";
 import AllBooks from "./component/AllBooks";
 import IssueBooks from "./component/IssueBooks";
-import { useContext, useEffect, useState } from "react";
-import LoginHeader from "./component/LoginHeader";
+import { useContext } from "react";
 import AllIssuedBook from "./component/AllIssuedBook";
 import AdminDashboard from "./component/AdminDashboard";
 import { AuthContext } from "./component/AuthContext";
+import UserLibrary from "./component/UserLibrary";
+import UserProfile from "./component/UserProfile";
 
 function App() {
   const { role } = useContext(AuthContext);
@@ -21,11 +22,26 @@ function App() {
 
   return (
     <div>
-      {location.pathname === "/" ? <LoginHeader /> : role === "ADMIN" ? <AdminHeader /> : <UserDashboard />}
+      {location.pathname === "/" ? (
+        <div className="Header">
+          <h1 className="loginHeaderh1">Library Management System</h1>
+        </div>
+      ) : role === "ADMIN" ? (
+        <AdminHeader />
+      ) : (
+        <UserDashboard />
+      )}
       <Routes>
         <Route path="/" element={<Login />} />
 
-        <Route element={<ProtectedRoute role="ADMIN"><Outlet /></ProtectedRoute>}>
+        {/* ADMIN ROUTING */}
+        <Route
+          element={
+            <ProtectedRoute role="ADMIN">
+              <Outlet />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/issueBook" element={<IssueBooks />} />
           <Route path="/userDetails" element={<AllUser />} />
@@ -34,34 +50,20 @@ function App() {
           <Route path="/adduser" element={<Register />} />
           <Route path="/issuedbook" element={<AllIssuedBook />} />
         </Route>
+
+        {/* USER ROUTING */}
+        <Route
+          element={
+            <ProtectedRoute role="USER">
+              <Outlet />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/home" element={<UserLibrary />} />
+          <Route path="/transaction" element={<UserProfile />} />
+        </Route>
       </Routes>
-
-
-      {/* <Route
-            path="/library"
-            element={
-              <ProtectedRoute role="USER">
-                <Library />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/transaction"
-            element={
-              <ProtectedRoute role="USER">
-                <Transaction />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute role="USER">
-                <Profile />
-              </ProtectedRoute>
-            }
-          /> */}
-    </div >
+    </div>
   );
 }
 

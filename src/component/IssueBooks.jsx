@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { BookContext } from "./BookContext";
 import { UserContext } from "./UserContext";
 import Select from "react-select";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const IssueBooks = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -11,34 +12,19 @@ const IssueBooks = () => {
     serialNumber: "",
     dueDate: today,
   });
+  const location = useLocation();
 
-  //context data
   const { users } = useContext(UserContext);
-  const [searchedUser, setSearchedUser] = useState();
 
   const allUser = users.map((u) => ({
     value: u._id,
     label: u.userName,
   }));
 
-  const { books: allBook, BASE_URL, token } = useContext(BookContext);
-  // const [allBook, setAllBooks] = useState([]);
-  // const [user, setUser] = useState([]);
-
-  const bookId = localStorage.getItem("issueBookId");
-
-  // const fetchData = async () => {
-  //   try {
-  //     const UserRes = await axios.get(`${BASE_URL}/user `, { headers: { Authorization: `Bearer ${token}` } });
-  //     setUser(UserRes.data.data.users);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  useEffect(() => {
-    setSearchedUser(users);
-  }, []);
+  const { books: allBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
+  const navigation = useNavigate();
+  const bookId = location.state.bookId;
+  const bookname = location.state.bookname;
 
   const saveData = (e) => {
     const k = e.target.name;
@@ -62,10 +48,57 @@ const IssueBooks = () => {
       if (res.data.message === "book issued succesfully!") {
         alert(res.data.message);
       }
-      localStorage.setItem("issueBookId", null);
+      setFetchAgain((p) => !p);
+      navigation("/allbook");
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: "1px solid black",
+      borderRadius: "8px",
+      minHeight: "32px", // 👈 overall height fix
+      height: "32px",
+      boxShadow: "none",
+    }),
+
+    menu: (base) => ({
+      ...base,
+      width: "250px",
+      zIndex: 9999,
+    }),
+
+    valueContainer: (provided) => ({
+      ...provided,
+      height: "32px",
+      padding: "0 8px",
+    }),
+
+    menuList: (base) => ({
+      ...base,
+      maxHeight: "100px",
+      overflowY: "auto",
+      overflowX: "hidden",
+    }),
+
+    input: (provided) => ({
+      ...provided,
+      margin: "0px",
+      padding: "0px",
+    }),
+
+    option: (base) => ({
+      ...base,
+      textTransform: "capitalize",
+    }),
+
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: "32px",
+    }),
   };
 
   return (
@@ -73,20 +106,13 @@ const IssueBooks = () => {
       {bookId !== null && (
         <div className="form">
           <h1>Book Issue Details</h1>
+          <p>Book : {bookname}</p>
           <form action="">
             <div>
               <label htmlFor="">User</label>
-              {/* <select name="userId" id="" onChange={saveData}>
-                <option value="" disabled selected>
-                  ---select---
-                </option>
-                {user.map((u) => (
-                  <option value={u._id}>{u.userName}</option>
-                ))}
-              </select> */}
-              {/* here in select drop down userName should display */}
               <Select
                 className="DropDownSelect"
+                styles={customStyles}
                 options={allUser}
                 isSearchable
                 placeholder="Search User"
@@ -142,8 +168,3 @@ const IssueBooks = () => {
 };
 
 export default IssueBooks;
-
-// users data
-// [0 :  {_id: '6a0df7ef03696ee0b7c7e509', userName: 'emily121', name: 'emily', email: 'emily@123.com', contact: 8878566421}
-// 1 :  {_id: '6a0df7d203696ee0b7c7e503', userName: 'testUser12', name: ' test user', email: 'testUser@123.com', contact: 9878566421}
-// 2 :  {_id: '6a0df79503696ee0b7c7e4fc', userName: 'mike22', name: ' mike', email: 'mike123@gmail.com', contact: 9878566425}]

@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { validateEmail, validatePassword } from "./Validation";
+import { UserContext } from "./UserContext";
 
 const Login = () => {
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const { users, BASE_URL } = useContext(UserContext);
   const { setRole, setToken } = useContext(AuthContext);
   const [loginform, setLoginform] = useState({
     email: "",
@@ -28,11 +29,11 @@ const Login = () => {
     setLoginform((formData) => ({ ...formData, [k]: val }));
 
     if (k === "email") {
-      setErrors((prev) => ({ ...prev, email: validateEmail(val), }));
+      setErrors((prev) => ({ ...prev, email: validateEmail(val) }));
     }
 
     if (k === "password") {
-      setErrors((prev) => ({ ...prev, password: validatePassword(val), }));
+      setErrors((prev) => ({ ...prev, password: validatePassword(val) }));
     }
   };
 
@@ -44,14 +45,16 @@ const Login = () => {
       const data = response.data.data;
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("role", data.role);
+      setRole(data.role);
+      setToken(data.accessToken);
 
       if (data.role === "ADMIN") {
         navigate("/admin");
       } else {
-        navigate("/user");
+        const user = users.find((u) => u.email === loginform?.email);
+        localStorage.setItem("user", user.userName);
+        navigate("/home");
       }
-      setRole(data.role);
-      setToken(data.accessToken);
     } catch (error) {
       console.log(error);
       alert("User Not Exist");
@@ -72,7 +75,7 @@ const Login = () => {
           <label htmlFor="">Enter password</label>
           <input type="password" name="password" onChange={saveData} />
           <div className="errorMsg">
-            <p >{errors.password}</p>
+            <p>{errors.password}</p>
           </div>
         </div>
         <button onClick={submitData}>Login</button>
