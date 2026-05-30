@@ -2,32 +2,27 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { validateBookAuthor, validateBtn, validateCopies, validateNumber } from "./Validation";
 import { BookContext } from "./BookContext";
+import { toast } from "react-toastify";
 
 const AddBooks = () => {
-  const { setFetchAgain } = useContext(BookContext);
+  const { setFetchAgain, BASE_URL, token } = useContext(BookContext);
   const [newBook, setnewBook] = useState({
     name: "",
     author: "",
-    totalCopies: null,
-    copies: "",
+    totalCopies: 1,
+    copies: [""],
   });
   const [errors, setErrors] = useState({
     name: "",
     author: "",
-    totalCopies: null,
     copies: "",
   });
-  const [backend, setBackend] = useState("");
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
   const saveData = (e) => {
     const k = e.target.name;
     const val = e.target.value;
 
     setnewBook((formData) => ({ ...formData, [k]: val }));
-
-    setnewBook((prev) => ({ ...prev, [k]: val }));
 
     if (k === "name") {
       setErrors((prev) => ({ ...prev, name: validateBookAuthor(val) }));
@@ -37,28 +32,16 @@ const AddBooks = () => {
       setErrors((prev) => ({ ...prev, author: validateBookAuthor(val) }));
     }
 
-    if (k === "totalCopies") {
-      setErrors((prev) => ({ ...prev, totalCopies: val <= 0 ? "Total copies must be greater than 0" : "" }));
-    }
-
-    if (k === "copies") {
-      setErrors((prev) => ({ ...prev, copies: validateCopies(val, newBook.totalCopies) }));
-    }
   };
 
   const submitData = async (e) => {
     e.preventDefault();
-    const finalBookData = {
-      ...newBook,
-      copies: newBook.copies.split(","),
-    };
-
-    if (errors.name || errors.author || errors.totalCopies || errors.copies) {
+    if (errors.name || errors.author || errors.copies) {
       return;
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/book`, finalBookData, {
+      const res = await axios.post(`${BASE_URL}/book`, newBook, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,17 +53,40 @@ const AddBooks = () => {
         setnewBook({
           name: "",
           author: "",
-          totalCopies: "",
-          copies: "",
+          totalCopies: 1,
+          copies: [""],
         });
       }
       setFetchAgain((p) => !p);
       setBackend("");
     } catch (e) {
       console.log(e);
-      setBackend(e.response?.data?.message || "Something went wrong");
+      toast.error(e.response?.data?.message || "Something went wrong")
     }
   };
+
+  const handleCopyChange = (index, value) => {
+    const updatedCopies = [...newBook.copies];
+    updatedCopies[index] = value;x
+
+    setnewBook((prev) => ({ ...prev, copies: updatedCopies, }));
+    setErrors((prev) => ({ ...prev, copies: validateCopies(newBook.copies, value) }));
+  };
+
+  const addCopyField = () => {
+    setnewBook((prev) => ({ ...prev, copies: [...prev.copies, ""], totalCopies: prev.totalCopies + 1, }));
+  };
+
+  const removeSno = (sno) => {
+    const updatedCopies = newBook.copies.filter((_, i) => i !== sno);
+
+    setnewBook((prev) => ({
+      ...prev,
+      copies: updatedCopies,
+      totalCopies: updatedCopies.length,
+    }));
+  }
+
   return (
     <div className="form">
       <h1>Add Books</h1>
@@ -100,24 +106,28 @@ const AddBooks = () => {
           </div>
         </div>{" "}
         <div>
-          <label htmlFor="">Enter Total Copies : </label>
-          <input type="number" name="totalCopies" onKeyDown={validateNumber} value={newBook.totalCopies} onChange={saveData} />
-          <div className="errorMsg">
-            <p>{errors.totalCopies}</p>
-          </div>
+          Total Copies {" "} <input type="number" name="totalCopies" placeholder="" onKeyDown={validateNumber} value={newBook.totalCopies} onChange={saveData} readOnly />
+          <button type="button" onClick={addCopyField}>+</button>
         </div>{" "}
         <div>
           <label htmlFor="">Enter Copies serial no : </label>
-          <input type="text" name="copies" value={newBook.copies} onChange={saveData} />{" "}
+          {newBook.copies.map((copy, index) => (
+            <div className="serialRow" key={index}>
+              <input
+                type="text"
+                value={copy}
+                placeholder={`Serial No ${index + 1}`}
+                onChange={(e) => handleCopyChange(index, e.target.value)}
+              />
+              <button type="button" onClick={() => removeSno(index)} disabled={newBook.copies.length === 1}>-</button>
+            </div>
+          ))}
           <div className="errorMsg">
             <p>{errors.copies}</p>
           </div>
         </div>
-        <small>Add serial number and separte them by comma(,)</small>
-        <div className="errorMsg">
-          <p>{backend}</p>
-        </div>
-        <button onClick={submitData} disabled={!validateBtn(errors,newBook)}> Add Book</button>
+     
+        <button type="submit" onClick={submitData} disabled={!validateBtn(errors, newBook)}> Add Book</button>
       </form>
     </div>
   );

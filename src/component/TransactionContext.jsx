@@ -13,7 +13,7 @@ const TransactionProvider = ({ children }) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [fetchAgain, setFetchAgain] = useState(false);
   const nav = useNavigate();
-  const { token } = useContext(AuthContext);
+  const { token, handleSessionExpired } = useContext(AuthContext);
 
   const fetchTransaction = async () => {
     setLoading(true);
@@ -28,10 +28,9 @@ const TransactionProvider = ({ children }) => {
       setTotalPage(res.data.data.pagination.totalPages);
     } catch (e) {
       console.log(e);
-    //   if (e.response?.status === 401) {
-    //     localStorage.clear();
-    //     nav("/");
-    //   }
+      if (e.response?.status === 401) {
+      handleSessionExpired();
+      }
     } finally {
       setLoading(false);
     }

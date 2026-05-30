@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { validateBtn, validateEmail, validatePassword } from "./Validation";
 import { UserContext } from "./UserContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { users, BASE_URL } = useContext(UserContext);
@@ -16,7 +17,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [backend, setBackend] = useState("");
   useEffect(() => {
     localStorage.clear();
   }, []);
@@ -57,7 +57,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      setBackend(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
   return (
@@ -78,10 +78,7 @@ const Login = () => {
             <p>{errors.password}</p>
           </div>
         </div>
-        <div className="errorMsg">
-          <p>{backend}</p>
-        </div>
-        <button onClick={submitData} disabled={!validateBtn(errors, loginform)}>
+            <button onClick={submitData} disabled={!validateBtn(errors, loginform)}>
           Login
         </button>
       </form>

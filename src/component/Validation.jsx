@@ -63,17 +63,17 @@ export const validateNumber = (e) => {
   }
 };
 
-export const validateCopies = (copies, totalCopies) => {
+export const validateCopies = (copies, val) => {
   let errors = "";
 
-  if (!copies.trim()) {
+  if (!val.trim()) {
     errors = "Serial numbers are required";
     return errors;
   }
-  const copiesArray = copies.split(",").map((copy) => copy.trim());
+  const findduplicate = copies.find((cval) => cval === val)
 
-  if (copiesArray.length !== Number(totalCopies)) {
-    errors = "Serial numbers count must match total copies";
+  if (findduplicate) {
+    errors = "Serial number already exist !!";
   }
 
   return errors;

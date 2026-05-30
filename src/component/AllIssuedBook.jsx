@@ -3,6 +3,7 @@ import { useContext } from "react";
 // import { useNavigate } from "react-router-dom";
 import { BookContext } from "./BookContext";
 import { TransactionContext } from "./TransactionContext";
+import { toast } from "react-toastify";
 
 const AllIssuedBook = () => {
   // const nav = useNavigate();
@@ -15,6 +16,7 @@ const AllIssuedBook = () => {
       await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
       setFetchAgain((pre) => !pre);
       setTransactionfetch((pre) => !pre);
+      toast.success("Book Returned !!")
     }
     return;
     // nav("/allbook");

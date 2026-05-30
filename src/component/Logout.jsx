@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Logout = () => {
 
@@ -11,6 +12,7 @@ const Logout = () => {
     localStorage.clear();
     setRole(null);
     setToken(null);
+    toast.success("Logged out")
     navigate("/");
   };
   return (

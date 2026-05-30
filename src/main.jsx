@@ -7,6 +7,8 @@ import UserProvider from "./component/UserContext.jsx";
 import BookProvider from "./component/BookContext.jsx";
 import AuthProvider from "./component/AuthContext.jsx";
 import TransactionProvider from "./component/TransactionContext.jsx";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -14,6 +16,7 @@ createRoot(document.getElementById("root")).render(
       <TransactionProvider>
         <UserProvider>
           <BookProvider>
+            <ToastContainer position="bottom-right" autoClose={2500} theme="colored"/>
             <App />
           </BookProvider>
         </UserProvider>

@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { validateBookAuthor, validateBtn, validateEmail, validateName, validateNumber, validatePassword, validatePhone } from "./Validation";
+import { toast } from "react-toastify";
+import { UserContext } from "./UserContext";
 
 const Register = () => {
   const [newUser, setNewUser] = useState({ name: " ", userName: "", email: "", password: "", contact: "" });
   const [errors, setErrors] = useState({ name: " ", userName: "", email: "", password: "", contact: "" });
-  const [backend, setBackend] = useState("");
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token");
+  const { BASE_URL, token, setFetchAgain } = useContext(UserContext)
   const saveData = (e) => {
     const k = e.target.name;
     const val = e.target.value;
@@ -46,13 +46,14 @@ const Register = () => {
         },
         timeout: 5000,
       });
-       if (res.data.message === "User created successfully") {
+      if (res.data.message === "User created successfully") {
         setNewUser({ name: " ", userName: "", email: "", password: "", contact: "" });
+        toast.success(res.data.message)
+        setFetchAgain((p)=>!p)
       }
-      setBackend("");
     } catch (e) {
       console.log(e.response?.data?.message);
-      setBackend(e.response?.data?.message || "Something went wrong");
+      toast.error(e.response?.data?.message || "Something went wrong");
     }
   };
   return (
@@ -94,9 +95,9 @@ const Register = () => {
             <p>{errors.contact}</p>
           </div>
         </div>
-        <div className="errorMsg">
+        {/* <div className="errorMsg">
           <p>{backend}</p>
-        </div>
+        </div> */}
         <button onClick={submitData} disabled={!validateBtn(errors, newUser)}>
           Add user
         </button>

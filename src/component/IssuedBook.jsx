@@ -5,9 +5,11 @@ import { UserContext } from "./UserContext";
 import Select from "react-select";
 import { useLocation, useNavigate } from "react-router-dom";
 import { validateBtn } from "./Validation";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const IssueBooks = () => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = dayjs().add(15,"day").format("YYYY-MM-DDTHH:mm");;
   const [issueBookData, setIssueBookData] = useState({
     userId: "",
     serialNumber: "",
@@ -16,9 +18,9 @@ const IssueBooks = () => {
   const [errors, setErrors] = useState({
     userId: "",
     serialNumber: "",
-    dueDate: today,
+    dueDate: "",
   });
-  const [backend, setBackend] = useState("");
+  // const [backend, setBackend] = useState("");
   const location = useLocation();
 
   const { users } = useContext(UserContext);
@@ -38,7 +40,7 @@ const IssueBooks = () => {
     const val = e.target.value;
 
     setIssueBookData((bookData) => ({ ...bookData, [k]: val }));
-   };
+  };
 
   const submitData = async (e) => {
     e.preventDefault();
@@ -53,8 +55,8 @@ const IssueBooks = () => {
       return;
     }
 
-    if (issueBookData.dueDate < today) {
-      setErrors((err) => ({ ...err, dueDate: "Due date cannot be less than today" }));
+    if (dayjs(issueBookData.dueDate).isBefore(dayjs())) {
+      setErrors((err) => ({ ...err, dueDate: "Due date cannot be in the past" }));
       return;
     }
 
@@ -66,18 +68,19 @@ const IssueBooks = () => {
         },
         timeout: 5000,
       });
-       if (res.data.message === "book issued succesfully!") {
+      if (res.data.message === "book issued succesfully!") {
         setIssueBookData({
           userId: "",
           serialNumber: "",
           dueDate: today,
         });
+        toast.success(res.data.message)
       }
       setFetchAgain((p) => !p);
       // navigation("/allbook");
     } catch (e) {
       console.log(e);
-      setBackend(e.response?.data?.message || "Something went-wrong");
+      toast.error(e.response?.data?.message || "Something went-wrong");
     }
   };
 
@@ -204,14 +207,14 @@ const IssueBooks = () => {
             </div>
             <div>
               <label htmlFor="">Due Date</label>
-              <input type="date" name="dueDate" id="" min={today} onChange={saveData} value={issueBookData.dueDate} />
+              <input type="datetime-local" name="dueDate" id="" min={today} onChange={saveData} value={issueBookData.dueDate} />
               <div className="errorMsg">
                 <p>{errors.dueDate}</p>
               </div>
             </div>
-            <div className="errorMsg">
+            {/* <div className="errorMsg">
               <p>{backend}</p>
-            </div>
+            </div> */}
             <button onClick={submitData} disabled={!validateBtn({}, issueBookData)}>
               Book Issued
             </button>

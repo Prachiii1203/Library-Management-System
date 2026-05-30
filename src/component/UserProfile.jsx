@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { TransactionContext } from "./TransactionContext";
+import dayjs from "dayjs";
 
 const UserProfile = () => {
   const { transaction, page, setPage, totalpage } = useContext(TransactionContext);
@@ -31,8 +32,8 @@ const UserProfile = () => {
                     {role === "ADMIN" && <td>{ut.user.userName}</td>}
                     <td>{ut.book.name}</td>
                     <td>{ut.transactionType}</td>
-                    <td>{ut.createdAt.split("T")[0]}</td>
-                    <td>{ut.dueDate !== null ? ut.dueDate.split("T")[0] : "-"}</td>
+                    <td>{dayjs(ut.createdAt).format("DD-MM-YYYY HH:mm")}</td>
+                    <td>{ut.dueDate !== null ? dayjs(ut.dueDate).format("DD-MM-YYYY HH:mm") : "-"}</td>
                   </tr>
                 ))}
               </tbody>

@@ -10,7 +10,7 @@ const BookProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [fetchAgain, setFetchAgain] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const { token } = useContext(AuthContext);
+  const { token, handleSessionExpired } = useContext(AuthContext);
   const nav = useNavigate();
   const fetchBooks = async () => {
     setLoading(true);
@@ -23,10 +23,9 @@ const BookProvider = ({ children }) => {
       setBooks(res.data.data);
     } catch (e) {
       console.log(e);
-      // if (e.response?.status === 401) {
-      //   localStorage.clear();
-      //   nav("/");
-      // }
+      if (e.response?.status === 401) {
+        handleSessionExpired();
+      }
     } finally {
       setLoading(false);
     }
