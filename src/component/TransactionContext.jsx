@@ -31,7 +31,7 @@ const TransactionProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
-        console.log("tra 401");
+        // console.log("tra 401");
         
         handleSessionExpired();
       }

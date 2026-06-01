@@ -3,14 +3,21 @@ import { useContext, useState } from "react";
 import { BookContext } from "./BookContext";
 import { UserContext } from "./UserContext";
 import Select from "react-select";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { validateBtn } from "./Validation";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { AuthContext } from "./AuthContext";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const IssueBooks = () => {
-  const today = dayjs().add(15, "day").format("YYYY-MM-DDTHH:mm");
+  // const localtime = new Date().toISOString();
+  const today = dayjs().add(7, "day").tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm");
+
   const [issueBookData, setIssueBookData] = useState({
     userId: "",
     serialNumber: "",
@@ -21,7 +28,6 @@ const IssueBooks = () => {
     serialNumber: "",
     dueDate: "",
   });
-  // const [backend, setBackend] = useState("");
   const location = useLocation();
 
   const { users } = useContext(UserContext);
@@ -33,7 +39,6 @@ const IssueBooks = () => {
   }));
 
   const { books: allBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
-  // const navigation = useNavigate();
   const bookId = location.state.bookId;
   const bookname = location.state.bookname;
 
@@ -42,6 +47,7 @@ const IssueBooks = () => {
     const val = e.target.value;
 
     setIssueBookData((bookData) => ({ ...bookData, [k]: val }));
+    console.log(issueBookData);
   };
 
   const submitData = async (e) => {
@@ -61,6 +67,7 @@ const IssueBooks = () => {
       setErrors((err) => ({ ...err, dueDate: "Due date cannot be in the past" }));
       return;
     }
+    console.log(issueBookData);
 
     try {
       const res = await axios.post(`${BASE_URL}/book/issue/${bookId}`, issueBookData, {
@@ -79,7 +86,7 @@ const IssueBooks = () => {
         toast.success(res.data.message);
       }
       setFetchAgain((p) => !p);
-      // navigation("/allbook");
+      setIssueBookData({ userId: "", serialNumber: "", dueDate: today });
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
@@ -172,6 +179,7 @@ const IssueBooks = () => {
               <label htmlFor="">User</label>
               <Select
                 className="DropDownSelect"
+                defaultInputValue=""
                 styles={customStyles}
                 options={allUser}
                 isSearchable
@@ -191,11 +199,10 @@ const IssueBooks = () => {
             </div>
             <div>
               <label htmlFor="">Serial Number</label>
-              <select name="serialNumber" id="" onChange={saveData}>
-                {/* <option value={""} disabled selected>
-                  ---Select SerialNumber---
-                </option> */}
-
+              <select name="serialNumber" id="" value={issueBookData.serialNumber} onChange={saveData}>
+                <option value={""} disabled selected>
+                  ---Select Serial Number---
+                </option>
                 {allBook.map(
                   (book) =>
                     book._id === bookId &&
@@ -208,6 +215,28 @@ const IssueBooks = () => {
                         ),
                     ),
                 )}
+
+                {/* {allBook.map((book) => (
+                  <>
+                    {book._id === bookId && (
+                      <>
+                        {book.copies && (
+                          <>
+                            {book.copies.map((bookcopy) => (
+                              <>
+                                {bookcopy.isAvailable && (
+                                  <option value={bookcopy.serialNumber} key={bookcopy._id}>
+                                    {bookcopy.serialNumber}
+                                  </option>
+                                )}
+                              </>
+                            ))}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                ))} */}
               </select>
             </div>
             <div>
@@ -217,7 +246,6 @@ const IssueBooks = () => {
                 <p>{errors.dueDate}</p>
               </div>
             </div>
-
             <button onClick={submitData} disabled={!validateBtn({}, issueBookData)}>
               Book Issued
             </button>
@@ -229,3 +257,4 @@ const IssueBooks = () => {
 };
 
 export default IssueBooks;
+

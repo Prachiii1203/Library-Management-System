@@ -1,13 +1,9 @@
 import { useContext } from "react";
 import { BookContext } from "./BookContext";
-import { useLocation } from "react-router-dom";
-
+ 
 const UserLibrary = () => {
   const { books } = useContext(BookContext);
-  const loc = useLocation();
-  const uname = loc.state;
-   
-  localStorage.setItem("user", uname);
+
   return (
     <div className="userLibrary">
       <div className="userLibraryHeader">

@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
-
+ 
 const CreateBookContext = createContext();
 
 const BookProvider = ({ children }) => {
@@ -11,7 +10,6 @@ const BookProvider = ({ children }) => {
   const [fetchAgain, setFetchAgain] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const { token, handleSessionExpired } = useContext(AuthContext);
-  const nav = useNavigate();
   const fetchBooks = async () => {
     if (!token) return;
 
@@ -26,7 +24,7 @@ const BookProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
-        console.log("book 401");
+        // console.log("book 401");
         handleSessionExpired();
       }
     } finally {

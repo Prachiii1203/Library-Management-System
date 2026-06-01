@@ -3,21 +3,28 @@ import { useContext } from "react";
 import { BookContext } from "./BookContext";
 import { TransactionContext } from "./TransactionContext";
 import { toast } from "react-toastify";
+import { AuthContext } from "./AuthContext";
 
 const AllIssuedBook = () => {
-
   const { books: allIssuedBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
   const { setFetchAgain: setTransactionfetch } = useContext(TransactionContext);
+  const { handleSessionExpired } = useContext(AuthContext);
 
   const returnedBook = async (id, serialNumber) => {
-    if (window.confirm("Book Returned Confirm ?")) {
-      await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
-      setFetchAgain((pre) => !pre);
-      setTransactionfetch((pre) => !pre);
-      toast.success("Book Returned !!");
+    try {
+      if (window.confirm("Book Returned Confirm ?")) {
+        await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
+        setFetchAgain((pre) => !pre);
+        setTransactionfetch((pre) => !pre);
+        toast.success("Book Returned !!");
+      }
+      return;
+    } catch (e) {
+      console.log(e);
+      if (e?.response?.status === 401) {
+        handleSessionExpired();
+      }
     }
-    return;
-    // nav("/allbook");
   };
 
   return (

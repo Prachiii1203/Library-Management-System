@@ -2,6 +2,11 @@ import { useContext } from "react";
 import { TransactionContext } from "./TransactionContext";
 import dayjs from "dayjs";
 import { AuthContext } from "./AuthContext";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const UserProfile = () => {
   const { transaction, page, setPage, totalpage } = useContext(TransactionContext);
@@ -33,7 +38,7 @@ const UserProfile = () => {
                     <td>{ut.book.name}</td>
                     <td>{ut.transactionType}</td>
                     <td>{dayjs(ut.createdAt).format("DD-MM-YYYY HH:mm")}</td>
-                    <td>{ut.dueDate !== null ? dayjs(ut.dueDate).format("DD-MM-YYYY HH:mm") : "-"}</td>
+                    <td>{ut.dueDate !== null ? dayjs.tz(ut.dueDate, "Asia/Kolkata").format("DD-MM-YYYY HH:mm") : "-"}</td>
                   </tr>
                 ))}
               </tbody>

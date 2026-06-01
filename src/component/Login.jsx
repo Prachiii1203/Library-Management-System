@@ -7,7 +7,7 @@ import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { users, BASE_URL } = useContext(UserContext);
+  const { BASE_URL } = useContext(UserContext);
   const { setRole, setToken, setSessionExpired } = useContext(AuthContext);
   const [loginform, setLoginform] = useState({
     email: "",
@@ -52,7 +52,6 @@ const Login = () => {
       if (data.role === "ADMIN") {
         navigate("/admin");
       } else {
-        // const user = users.find((u) => u.email === loginform?.email);
         navigate("/home");
       }
     } catch (error) {

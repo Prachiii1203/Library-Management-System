@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
-import { Navigate, useNavigate } from "react-router-dom";
+// import { Navigate, useNavigate } from "react-router-dom";
 
 export const UserContext = createContext();
 
@@ -29,7 +29,7 @@ const UserProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
-        console.log("user 401");
+        // console.log("user 401");
         handleSessionExpired();
       }
     } finally {

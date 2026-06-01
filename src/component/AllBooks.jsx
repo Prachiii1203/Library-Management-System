@@ -8,8 +8,7 @@ const AllBooks = ({ showIssueBtn }) => {
   const [books, setBooks] = useState(allbooks);
 
   const IssueBookBtn = (id, name) => {
-    // localStorage.setItem("issueBookId", id);
-    const data = { bookId: id, bookname: name };
+     const data = { bookId: id, bookname: name };
     nav("/issueBook", { state: data });
   };
 

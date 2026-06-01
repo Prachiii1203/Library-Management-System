@@ -100,9 +100,7 @@ const Register = () => {
             <p>{errors.contact}</p>
           </div>
         </div>
-        {/* <div className="errorMsg">
-          <p>{backend}</p>
-        </div> */}
+
         <button onClick={submitData} disabled={!validateBtn(errors, newUser)}>
           Add user
         </button>

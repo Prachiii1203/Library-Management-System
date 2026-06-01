@@ -11,8 +11,6 @@ const AdminHeader = () => {
             <h2>Admin Panel </h2>
           </Link>{" "}
           <Link to="/allbook"> Library</Link>
-          {/* <Link to="/add-book">Add Books</Link> */}
-          {/* <Link to="/adduser">Add User</Link> */}
           <Link to="/userDetails">Users</Link>
           <Link to="/issuedbook">Return Book</Link>
           <Link to="/history">Book history</Link>
