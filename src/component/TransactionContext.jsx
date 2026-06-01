@@ -16,6 +16,8 @@ const TransactionProvider = ({ children }) => {
   const { token, handleSessionExpired } = useContext(AuthContext);
 
   const fetchTransaction = async () => {
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/transaction?page=${page}&limit=10`, {
@@ -24,12 +26,14 @@ const TransactionProvider = ({ children }) => {
         },
       });
       setTransaction(res.data.data.transactions);
- 
+
       setTotalPage(res.data.data.pagination.totalPages);
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
-      handleSessionExpired();
+        console.log("tra 401");
+        
+        handleSessionExpired();
       }
     } finally {
       setLoading(false);

@@ -1,12 +1,10 @@
 import axios from "axios";
 import { useContext } from "react";
-// import { useNavigate } from "react-router-dom";
 import { BookContext } from "./BookContext";
 import { TransactionContext } from "./TransactionContext";
 import { toast } from "react-toastify";
 
 const AllIssuedBook = () => {
-  // const nav = useNavigate();
 
   const { books: allIssuedBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
   const { setFetchAgain: setTransactionfetch } = useContext(TransactionContext);
@@ -16,7 +14,7 @@ const AllIssuedBook = () => {
       await axios.post(`${BASE_URL}/book/return/${id}`, { serialNumber }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } });
       setFetchAgain((pre) => !pre);
       setTransactionfetch((pre) => !pre);
-      toast.success("Book Returned !!")
+      toast.success("Book Returned !!");
     }
     return;
     // nav("/allbook");
@@ -37,23 +35,20 @@ const AllIssuedBook = () => {
             </tr>
           </thead>
           <tbody>
-            {allIssuedBook.map((book) => (
-              <>
-                {book.copies.map((copy) => (
-                  <>
-                    {!copy.isAvailable && (
-                      <tr key={book._id}>
-                        <td>{book.name}</td>
-                        <td>{copy.serialNumber}</td>
-                        <td>
-                          <button onClick={() => returnedBook(book._id, copy.serialNumber)}>Return</button>
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                ))}
-              </>
-            ))}
+            {allIssuedBook.map((book) =>
+              book.copies.map(
+                (copy) =>
+                  !copy.isAvailable && (
+                    <tr key={`${book._id}-${copy.serialNumber}`}>
+                      <td>{book.name}</td>
+                      <td>{copy.serialNumber}</td>
+                      <td>
+                        <button onClick={() => returnedBook(book._id, copy.serialNumber)}>Return</button>
+                      </td>
+                    </tr>
+                  ),
+              ),
+            )}
           </tbody>
         </table>
       </div>

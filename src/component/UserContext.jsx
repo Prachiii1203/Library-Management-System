@@ -12,10 +12,11 @@ const UserProvider = ({ children }) => {
   const [totalpage, setTotalPage] = useState(0);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [fetchAgain, setFetchAgain] = useState(false);
-  const nav = useNavigate();
-  const { token, handleSessionExpired } = useContext(AuthContext);
+  const { role, token, handleSessionExpired } = useContext(AuthContext);
 
   const fetchUsers = async () => {
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/user?page=${page}&limit=10`, {
@@ -28,6 +29,7 @@ const UserProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
+        console.log("user 401");
         handleSessionExpired();
       }
     } finally {
@@ -35,9 +37,10 @@ const UserProvider = ({ children }) => {
     }
   };
 
-
   useEffect(() => {
-    fetchUsers();
+    if (role === "ADMIN") {
+      fetchUsers();
+    }
   }, [page, fetchAgain, token]);
 
   return <UserContext.Provider value={{ users, setUsers, fetchUsers, page, setPage, loading, totalpage, BASE_URL, token, setFetchAgain }}>{children}</UserContext.Provider>;

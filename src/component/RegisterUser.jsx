@@ -3,12 +3,14 @@ import { useContext, useState } from "react";
 import { validateBookAuthor, validateBtn, validateEmail, validateName, validateNumber, validatePassword, validatePhone } from "./Validation";
 import { toast } from "react-toastify";
 import { UserContext } from "./UserContext";
+import { AuthContext } from "./AuthContext";
 
 const Register = () => {
   const [newUser, setNewUser] = useState({ name: " ", userName: "", email: "", password: "", contact: "" });
   const [errors, setErrors] = useState({ name: " ", userName: "", email: "", password: "", contact: "" });
 
-  const { BASE_URL, token, setFetchAgain } = useContext(UserContext)
+  const { BASE_URL, token, setFetchAgain } = useContext(UserContext);
+  const { handleSessionExpired } = useContext(AuthContext);
   const saveData = (e) => {
     const k = e.target.name;
     const val = e.target.value;
@@ -48,11 +50,14 @@ const Register = () => {
       });
       if (res.data.message === "User created successfully") {
         setNewUser({ name: " ", userName: "", email: "", password: "", contact: "" });
-        toast.success(res.data.message)
-        setFetchAgain((p)=>!p)
+        toast.success(res.data.message);
+        setFetchAgain((p) => !p);
       }
     } catch (e) {
       console.log(e.response?.data?.message);
+      if (e.response?.status === 401) {
+        handleSessionExpired();
+      }
       toast.error(e.response?.data?.message || "Something went wrong");
     }
   };

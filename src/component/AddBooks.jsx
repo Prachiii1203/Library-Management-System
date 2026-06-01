@@ -31,7 +31,6 @@ const AddBooks = () => {
     if (k === "author") {
       setErrors((prev) => ({ ...prev, author: validateBookAuthor(val) }));
     }
-
   };
 
   const submitData = async (e) => {
@@ -58,23 +57,23 @@ const AddBooks = () => {
         });
       }
       setFetchAgain((p) => !p);
-      setBackend("");
     } catch (e) {
       console.log(e);
-      toast.error(e.response?.data?.message || "Something went wrong")
+      toast.error(e.response?.data?.message || "Something went wrong");
     }
   };
 
   const handleCopyChange = (index, value) => {
     const updatedCopies = [...newBook.copies];
-    updatedCopies[index] = value;x
+    updatedCopies[index] = value;
+    x;
 
-    setnewBook((prev) => ({ ...prev, copies: updatedCopies, }));
+    setnewBook((prev) => ({ ...prev, copies: updatedCopies }));
     setErrors((prev) => ({ ...prev, copies: validateCopies(newBook.copies, value) }));
   };
 
   const addCopyField = () => {
-    setnewBook((prev) => ({ ...prev, copies: [...prev.copies, ""], totalCopies: prev.totalCopies + 1, }));
+    setnewBook((prev) => ({ ...prev, copies: [...prev.copies, ""], totalCopies: prev.totalCopies + 1 }));
   };
 
   const removeSno = (sno) => {
@@ -85,7 +84,7 @@ const AddBooks = () => {
       copies: updatedCopies,
       totalCopies: updatedCopies.length,
     }));
-  }
+  };
 
   return (
     <div className="form">
@@ -106,28 +105,29 @@ const AddBooks = () => {
           </div>
         </div>{" "}
         <div>
-          Total Copies {" "} <input type="number" name="totalCopies" placeholder="" onKeyDown={validateNumber} value={newBook.totalCopies} onChange={saveData} readOnly />
-          <button type="button" onClick={addCopyField}>+</button>
+          Total Copies <input type="number" name="totalCopies" placeholder="" onKeyDown={validateNumber} value={newBook.totalCopies} onChange={saveData} readOnly />
+          <button type="button" onClick={addCopyField}>
+            +
+          </button>
         </div>{" "}
         <div>
           <label htmlFor="">Enter Copies serial no : </label>
           {newBook.copies.map((copy, index) => (
             <div className="serialRow" key={index}>
-              <input
-                type="text"
-                value={copy}
-                placeholder={`Serial No ${index + 1}`}
-                onChange={(e) => handleCopyChange(index, e.target.value)}
-              />
-              <button type="button" onClick={() => removeSno(index)} disabled={newBook.copies.length === 1}>-</button>
+              <input type="text" value={copy} placeholder={`Serial No ${index + 1}`} onChange={(e) => handleCopyChange(index, e.target.value)} />
+              <button type="button" onClick={() => removeSno(index)} disabled={newBook.copies.length === 1}>
+                -
+              </button>
             </div>
           ))}
           <div className="errorMsg">
             <p>{errors.copies}</p>
           </div>
         </div>
-     
-        <button type="submit" onClick={submitData} disabled={!validateBtn(errors, newBook)}> Add Book</button>
+        <button type="submit" onClick={submitData} disabled={!validateBtn(errors, newBook)}>
+          {" "}
+          Add Book
+        </button>
       </form>
     </div>
   );

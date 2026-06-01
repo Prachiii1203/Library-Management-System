@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { TransactionContext } from "./TransactionContext";
 import dayjs from "dayjs";
+import { AuthContext } from "./AuthContext";
 
 const UserProfile = () => {
   const { transaction, page, setPage, totalpage } = useContext(TransactionContext);
 
-  const [role, setRole] = useState(localStorage.getItem("role"));
-
+  const { role } = useContext(AuthContext);
   return (
     <div>
       <div className="allUser">

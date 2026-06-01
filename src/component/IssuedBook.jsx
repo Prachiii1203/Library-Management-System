@@ -7,9 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { validateBtn } from "./Validation";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { AuthContext } from "./AuthContext";
 
 const IssueBooks = () => {
-  const today = dayjs().add(15,"day").format("YYYY-MM-DDTHH:mm");;
+  const today = dayjs().add(15, "day").format("YYYY-MM-DDTHH:mm");
   const [issueBookData, setIssueBookData] = useState({
     userId: "",
     serialNumber: "",
@@ -24,6 +25,7 @@ const IssueBooks = () => {
   const location = useLocation();
 
   const { users } = useContext(UserContext);
+  const { handleSessionExpired } = useContext(AuthContext);
 
   const allUser = users.map((u) => ({
     value: u._id,
@@ -31,7 +33,7 @@ const IssueBooks = () => {
   }));
 
   const { books: allBook, BASE_URL, token, setFetchAgain } = useContext(BookContext);
-  const navigation = useNavigate();
+  // const navigation = useNavigate();
   const bookId = location.state.bookId;
   const bookname = location.state.bookname;
 
@@ -74,12 +76,15 @@ const IssueBooks = () => {
           serialNumber: "",
           dueDate: today,
         });
-        toast.success(res.data.message)
+        toast.success(res.data.message);
       }
       setFetchAgain((p) => !p);
       // navigation("/allbook");
     } catch (e) {
       console.log(e);
+      if (e.response?.status === 401) {
+        handleSessionExpired();
+      }
       toast.error(e.response?.data?.message || "Something went-wrong");
     }
   };
@@ -90,6 +95,8 @@ const IssueBooks = () => {
       border: "1px solid black",
       borderRadius: "8px",
       minHeight: "32px",
+      height: "32px",
+      overflow: "hidden",
       maxHeight: "32px",
       boxShadow: "none",
     }),
@@ -100,6 +107,8 @@ const IssueBooks = () => {
       padding: "0 8px",
       display: "flex",
       alignItems: "center",
+      flexWrap: "nowrap",
+      overflow: "hidden",
     }),
 
     input: (provided) => ({
@@ -107,11 +116,15 @@ const IssueBooks = () => {
       margin: "0px",
       padding: "0px",
       color: "black",
+      position: "absolute",
     }),
 
     singleValue: (provided) => ({
       ...provided,
       color: "black",
+      position: "static",
+      transform: "none",
+      maxWidth: "100%",
     }),
 
     indicatorsContainer: (provided) => ({
@@ -147,6 +160,7 @@ const IssueBooks = () => {
       textTransform: "capitalize",
     }),
   };
+
   return (
     <div>
       {bookId !== null && (
@@ -178,31 +192,22 @@ const IssueBooks = () => {
             <div>
               <label htmlFor="">Serial Number</label>
               <select name="serialNumber" id="" onChange={saveData}>
-                <option value="" disabled selected>
-                  ---select---
-                </option>
+                {/* <option value={""} disabled selected>
+                  ---Select SerialNumber---
+                </option> */}
 
-                {allBook.map((book) => (
-                  <>
-                    {book._id === bookId && (
-                      <>
-                        {book.copies && (
-                          <>
-                            {book.copies.map((bookcopy) => (
-                              <>
-                                {bookcopy.isAvailable && (
-                                  <option value={bookcopy.serialNumber} key={bookcopy._id}>
-                                    {bookcopy.serialNumber}
-                                  </option>
-                                )}
-                              </>
-                            ))}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                ))}
+                {allBook.map(
+                  (book) =>
+                    book._id === bookId &&
+                    book.copies?.map(
+                      (bookcopy) =>
+                        bookcopy.isAvailable && (
+                          <option key={bookcopy.serialNumber} value={bookcopy.serialNumber}>
+                            {bookcopy.serialNumber}
+                          </option>
+                        ),
+                    ),
+                )}
               </select>
             </div>
             <div>
@@ -212,9 +217,7 @@ const IssueBooks = () => {
                 <p>{errors.dueDate}</p>
               </div>
             </div>
-            {/* <div className="errorMsg">
-              <p>{backend}</p>
-            </div> */}
+
             <button onClick={submitData} disabled={!validateBtn({}, issueBookData)}>
               Book Issued
             </button>

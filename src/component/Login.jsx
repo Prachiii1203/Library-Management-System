@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const Login = () => {
   const { users, BASE_URL } = useContext(UserContext);
-  const { setRole, setToken } = useContext(AuthContext);
+  const { setRole, setToken, setSessionExpired } = useContext(AuthContext);
   const [loginform, setLoginform] = useState({
     email: "",
     password: "",
@@ -48,7 +48,7 @@ const Login = () => {
       localStorage.setItem("role", data.role);
       setRole(data.role);
       setToken(data.accessToken);
-
+      setSessionExpired(false);
       if (data.role === "ADMIN") {
         navigate("/admin");
       } else {
@@ -58,6 +58,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Something went wrong");
+      setLoginform({ email: "", password: "" });
     }
   };
   return (
@@ -78,7 +79,7 @@ const Login = () => {
             <p>{errors.password}</p>
           </div>
         </div>
-            <button onClick={submitData} disabled={!validateBtn(errors, loginform)}>
+        <button onClick={submitData} disabled={!validateBtn(errors, loginform)}>
           Login
         </button>
       </form>

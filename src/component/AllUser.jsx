@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import { toast } from "react-toastify";
 
 const AllUser = () => {
   const { users, page, setPage, totalpage, setFetchAgain } = useContext(UserContext);
@@ -21,6 +22,10 @@ const AllUser = () => {
         setFetchAgain((pre) => !pre);
       } catch (e) {
         console.log(e);
+        if (e.response?.status === 401) {
+          toast.error("Session expires.Please Login Again");
+          nav("/");
+        }
       }
     }
   };

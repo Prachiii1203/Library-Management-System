@@ -13,6 +13,8 @@ const BookProvider = ({ children }) => {
   const { token, handleSessionExpired } = useContext(AuthContext);
   const nav = useNavigate();
   const fetchBooks = async () => {
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/book`, {
@@ -24,6 +26,7 @@ const BookProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
       if (e.response?.status === 401) {
+        console.log("book 401");
         handleSessionExpired();
       }
     } finally {
